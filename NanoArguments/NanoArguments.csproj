@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Version>1.0.0</Version>
+        <Authors>Kiber2009</Authors>
+        <Copyright>Copyright © Kiber2009 2026</Copyright>
+        <Description>Parser for command-line arguments</Description>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/Kiber2009/NanoArguments</RepositoryUrl>
+
+        <PackageId>NanoArguments</PackageId>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+</Project>
