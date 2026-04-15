@@ -1,0 +1,36 @@
+﻿on: push
+jobs:
+  find-projects:
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.find.outputs.projects }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: find
+        run: |
+          projects=$(find . -name "*.csproj" -print0 | while IFS= read -r -d '' proj; do
+            name=$(basename "$proj" .csproj)
+            jq -n --arg path "$proj" --arg name "$name" '{path: $path, name: $name}'
+          done | jq -s -c '.')
+          echo "projects=$projects" >> $GITHUB_OUTPUT
+  build:
+    needs: find-projects
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.find-projects.outputs.projects) }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+      - run: dotnet build "${{ matrix.project.path }}" -c Release
+      - uses: actions/upload-artifact@v7
+        name: Upload nupkg
+        with:
+          path: ${{ dirname(matrix.project.path) }}/bin/Release/*.nupkg
+          archive: false
+      - uses: actions/upload-artifact@v7
+        name: Upload build
+        with: 
+          path: ${{ dirname(matrix.project.path) }}/bin/Release/**/
+          name: ${{ matrix.project.name }}
