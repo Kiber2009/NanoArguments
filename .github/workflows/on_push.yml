@@ -5,7 +5,7 @@ jobs:
     outputs:
       projects: ${{ steps.find.outputs.projects }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: find
         run: |
           projects=$(find . -name "*.csproj" -print0 | while IFS= read -r -d '' proj; do
