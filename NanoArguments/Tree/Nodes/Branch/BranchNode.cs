@@ -20,6 +20,11 @@ public class BranchNode : INode
         return this;
     }
 
+    public virtual bool Check(ParsingContext context, uint pos)
+    {
+        return true;
+    }
+
     public virtual Action<ParsingContext> Parse(ParsingContext context, uint pos)
     {
         foreach ((INode node, ICondition? condition) in _branches)

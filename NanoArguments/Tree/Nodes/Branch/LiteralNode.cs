@@ -4,7 +4,7 @@ namespace NanoArguments.Tree.Nodes.Branch;
 
 public class LiteralNode(string literal) : BranchNode
 {
-    public bool Check(ParsingContext context, uint pos)
+    public override bool Check(ParsingContext context, uint pos)
     {
         return context.ParserResult.PositionalArgs[pos] == literal;
     }

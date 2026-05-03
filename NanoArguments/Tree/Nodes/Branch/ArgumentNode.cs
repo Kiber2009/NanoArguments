@@ -5,9 +5,10 @@ namespace NanoArguments.Tree.Nodes.Branch;
 
 public class ArgumentNode<T>(IArgumentParser<T> parser, string name) : BranchNode
 {
-    public bool Check(ParsingContext context, uint pos)
+    public override bool Check(ParsingContext context, uint pos)
     {
-        return parser.Check(context, context.ParserResult.PositionalArgs[pos]);
+        return context.ParserResult.PositionalArgs.Length != 0 &&
+               parser.Check(context, context.ParserResult.PositionalArgs[pos]);
     }
 
     public override Action<ParsingContext> Parse(ParsingContext context, uint pos)
