@@ -1,0 +1,93 @@
+﻿on: workflow_dispatch
+jobs:
+  find-projects:
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.find.outputs.projects }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: find
+        run: |
+          projects=$(find . -name "*.csproj" -print0 | while IFS= read -r -d '' proj; do
+            name=$(basename "$proj" .csproj)
+            dir=$(dirname "$proj")
+            jq -n --arg path "$proj" --arg name "$name" --arg dir "$dir" \
+              '{path: $path, name: $name, dir: $dir}'
+          done | jq -s -c '.')
+          echo "projects=$projects" >> $GITHUB_OUTPUT
+  build:
+    needs: find-projects
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.find-projects.outputs.projects) }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+      - run: dotnet build "${{ matrix.project.path }}" -c Release
+      - uses: actions/upload-artifact@v7
+        name: Upload nupkg
+        with:
+          path: ${{ matrix.project.dir }}/bin/Release/*.nupkg
+          archive: false
+      - uses: actions/upload-artifact@v7
+        name: Upload build
+        with:
+          path: ${{ matrix.project.dir }}/bin/Release/**/
+          name: ${{ matrix.project.name }}
+  get-verion:
+    needs: build
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          skip-decompress: true
+      - id: get_version
+        run: |
+          FILE=$(ls bin/Release/*.nupkg | head -n 1)
+          VERSION=$(echo $FILE | grep -oP '(?<=\.)[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?(?=\.nupkg)')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+  release:
+    needs: get-verion
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          skip-decompress: true
+      - uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ needs.get-verion.outputs.version }}
+          files: artifacts/*
+          generate_release_notes: true
+  publish-nuget-org:
+    needs: get-verion
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+      - uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          skip-decompress: true
+      - uses: NuGet/login@v1
+        id: login
+        with:
+          user: Kiber2009
+      - name: Push package
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://www.nuget.org/api/v2/package
+  publish-github:
+    needs: get-verion
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+      - uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          skip-decompress: true
+      - name: Push package
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key "${{ secrets.GITHUB_TOKEN }}" --source "github"
