@@ -2,6 +2,8 @@
 jobs:
   find-projects:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       projects: ${{ steps.find.outputs.projects }}
     steps:
@@ -18,6 +20,8 @@ jobs:
   build:
     needs: find-projects
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -33,6 +37,6 @@ jobs:
           archive: false
       - uses: actions/upload-artifact@v7
         name: Upload build
-        with: 
+        with:
           path: ${{ matrix.project.dir }}/bin/Release/**/
           name: ${{ matrix.project.name }}
