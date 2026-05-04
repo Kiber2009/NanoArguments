@@ -38,6 +38,7 @@ jobs:
           name: ${{ matrix.project.name }}
   get-verion:
     needs: build
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
@@ -52,6 +53,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
   release:
     needs: get-verion
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v8
         with:
@@ -64,6 +66,7 @@ jobs:
           generate_release_notes: true
   publish-nuget-org:
     needs: get-verion
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v5
