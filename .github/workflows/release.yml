@@ -82,6 +82,7 @@ jobs:
         run: dotnet nuget push ./artifacts/*.nupkg --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://www.nuget.org/api/v2/package
   publish-github:
     needs: get-verion
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
