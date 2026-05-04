@@ -2,6 +2,9 @@
 
 public class UShortArgumentParser : IArgumentParser<ushort>
 {
+    public static UShortArgumentParser Instance { get; } = new();
+    private UShortArgumentParser() { }
+
     public bool Check(ParsingContext context, string value)
     {
         return ushort.TryParse(value, out _);

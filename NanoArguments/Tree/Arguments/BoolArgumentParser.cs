@@ -4,6 +4,9 @@ namespace NanoArguments.Tree.Arguments;
 
 public class BoolArgumentParser : IArgumentParser<bool>
 {
+    public static BoolArgumentParser Instance { get; } = new();
+    private BoolArgumentParser() { }
+
     public bool Check(ParsingContext context, string value)
     {
         if (context.BoolValuesCompareLowercase)

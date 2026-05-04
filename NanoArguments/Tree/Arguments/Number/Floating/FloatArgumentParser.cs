@@ -2,6 +2,9 @@
 
 public class FloatArgumentParser : IArgumentParser<float>
 {
+    public static FloatArgumentParser Instance { get; } = new();
+    private FloatArgumentParser() { }
+
     public bool Check(ParsingContext context, string value)
     {
         return float.TryParse(value, out _);

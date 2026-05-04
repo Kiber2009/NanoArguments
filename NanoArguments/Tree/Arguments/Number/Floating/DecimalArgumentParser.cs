@@ -2,6 +2,9 @@
 
 public class DecimalArgumentParser : IArgumentParser<decimal>
 {
+    public static DecimalArgumentParser Instance { get; } = new();
+    private DecimalArgumentParser() { }
+    
     public bool Check(ParsingContext context, string value)
     {
         return decimal.TryParse(value, out _);
