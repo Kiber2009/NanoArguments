@@ -48,7 +48,7 @@ jobs:
           skip-decompress: true
       - id: get_version
         run: |
-          FILE=$(ls bin/Release/*.nupkg | head -n 1)
+          FILE=$(ls artifacts/*.nupkg | head -n 1)
           VERSION=$(echo $FILE | grep -oP '(?<=\.)[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?(?=\.nupkg)')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
   release:
