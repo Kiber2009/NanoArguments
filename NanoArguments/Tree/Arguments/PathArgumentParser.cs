@@ -5,9 +5,6 @@ namespace NanoArguments.Tree.Arguments;
 
 public class PathArgumentParser : IArgumentParser<string>
 {
-    public static PathArgumentParser Instance { get; } = new();
-    private PathArgumentParser() { }
-
     private readonly Filter _filter;
 
     public PathArgumentParser(Filter filter = Filter.Any)
