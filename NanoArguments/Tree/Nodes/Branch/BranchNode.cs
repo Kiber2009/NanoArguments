@@ -31,7 +31,8 @@ public class BranchNode : INode
         {
             if (!(condition?.Check(context.ParserResult) ?? true))
                 continue;
-            return node.Parse(context, pos);
+            if (node.Check(context, pos))
+                return node.Parse(context, pos);
         }
 
         throw new CommandSyntaxException("No branches matching the condition were found", pos);
