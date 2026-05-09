@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 
 namespace NanoArguments.Tree.Nodes.Branch;
 
 public class LiteralNode(ISet<string> literal) : BranchNode
 {
-    public LiteralNode(string literal) : this(new HashSet<string> { literal }) { }
+    public LiteralNode(params string[] literal) : this(literal.ToFrozenSet()) { }
 
     public override bool Check(ParsingContext context, uint pos)
     {
