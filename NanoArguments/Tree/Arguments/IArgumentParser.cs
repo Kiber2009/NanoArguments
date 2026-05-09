@@ -2,7 +2,7 @@
 
 public interface IArgumentParser<out T>
 {
-    bool Check(ParsingContext context, string value);
+    public bool Check(ParsingContext context, string value);
 
-    T Parse(ParsingContext context, string value);
+    public T Parse(ParsingContext context, string value);
 }

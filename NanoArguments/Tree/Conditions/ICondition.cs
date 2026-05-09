@@ -4,7 +4,7 @@ namespace NanoArguments.Tree.Conditions;
 
 public interface ICondition
 {
-    bool Check(SimpleParserResult result);
+    public bool Check(SimpleParserResult result);
 
     static NotCondition operator !(ICondition condition)
     {
