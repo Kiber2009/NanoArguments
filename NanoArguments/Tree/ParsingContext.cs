@@ -2,7 +2,6 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
-using NanoArguments.Exceptions;
 using NanoArguments.Exceptions.Flag;
 using NanoArguments.Exceptions.Flag.KeyValue;
 
