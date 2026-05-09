@@ -1,12 +1,13 @@
 ﻿using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.Linq;
 using NanoArguments.ArgumentTokens;
 
 namespace NanoArguments.Tree.Conditions.Flag;
 
-public class LongFlagCondition(FrozenSet<string> flags) : ICondition
+public class LongFlagCondition(ISet<string> flags) : ICondition
 {
-    private readonly FrozenSet<string> _flags = flags;
+    private readonly ISet<string> _flags = flags;
 
     public LongFlagCondition(params LongFlagArgumentToken[] tokens) :
         this(tokens.Select(t => t.Value).ToFrozenSet()) { }
